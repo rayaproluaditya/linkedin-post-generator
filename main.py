@@ -30,7 +30,10 @@ st.markdown("""
         box-shadow: 0 8px 32px 0 rgba(23, 38, 135, 0.2);
         border: 1px solid rgba(0, 114, 177, 0.2);
         color: #0072b1;
-        margin-bottom: 1rem;
+        margin-top: 1rem;
+        font-size: 1.1em;
+        line-height: 1.6;
+        white-space: pre-wrap;
     }
 
     div.stButton > button {
@@ -51,7 +54,7 @@ st.markdown("""
         transform: scale(1.05);
     }
 
-    /* Selectbox text and border */
+    /* Selectbox styling */
     .stSelectbox > div > div {
         background-color: #ffffff !important;
         color: #0072b1 !important;
@@ -59,18 +62,15 @@ st.markdown("""
         border-radius: 10px;
     }
 
-    /* Dropdown arrow color */
     .stSelectbox svg {
         color: #0072b1 !important;
     }
 
-    /* Dropdown menu items background */
     .stSelectbox ul {
-        background-color: #e6f2fa !important; /* Light blue background */
+        background-color: #e6f2fa !important;
         color: #0072b1 !important;
     }
 
-    /* Dropdown item hover effect */
     .stSelectbox ul li:hover {
         background-color: #cce5f6 !important;
     }
@@ -87,32 +87,26 @@ def main():
     fs = FewShotPosts()
     tags = fs.get_tags()
 
-    with st.container():
-        col1, col2, col3 = st.columns(3)
-
-        with col1:
-            st.markdown('<div class="glass-box">', unsafe_allow_html=True)
-            selected_tag = st.selectbox("✨ Choose Topic", options=tags)
-            st.markdown('</div>', unsafe_allow_html=True)
-
-        with col2:
-            st.markdown('<div class="glass-box">', unsafe_allow_html=True)
-            selected_length = st.selectbox("📏 Length", options=length_options)
-            st.markdown('</div>', unsafe_allow_html=True)
-
-        with col3:
-            st.markdown('<div class="glass-box">', unsafe_allow_html=True)
-            selected_language = st.selectbox("🗣️ Language", options=language_options)
-            st.markdown('</div>', unsafe_allow_html=True)
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        selected_tag = st.selectbox("✨ Choose Topic", options=tags)
+    with col2:
+        selected_length = st.selectbox("📏 Length", options=length_options)
+    with col3:
+        selected_language = st.selectbox("🗣️ Language", options=language_options)
 
     st.markdown("<br>", unsafe_allow_html=True)
 
+    post = ""
     if st.button("✨ Generate Post"):
         with st.spinner("🛠️ Crafting a powerful LinkedIn post for you..."):
             post = generate_post(selected_length, selected_language, selected_tag)
-        st.markdown('<div class="glass-box">', unsafe_allow_html=True)
-        st.markdown(f"<div style='white-space: pre-wrap;'>{post}</div>", unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+
+    # Output in white box with blue text inside
+    if post:
+        st.markdown(f'<div class="glass-box">{post}</div>', unsafe_allow_html=True)
+    else:
+        st.markdown('<div class="glass-box" style="text-align:center; color:#999;">Your generated post will appear here ✨</div>', unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
